@@ -1,0 +1,17 @@
+{
+ "file": "data/dem.bin",
+ "dtype": "int16-le",
+ "skala": 0.1,
+ "nodata": -32768,
+ "lebar": 946,
+ "tinggi": 915,
+ "x0": 376984.1122923933,
+ "y0": 132910.83804700698,
+ "res_x": 30.0,
+ "res_y": 30.0,
+ "crs": "EPSG:32648",
+ "datum_vertikal": "DUMMY (sintetis, tanpa datum)",
+ "sumber": "DEM DUMMY sintetis SIGMA Batam, seed 20261106; ganti DEMNAS/LiDAR (RFI-01 A05)",
+ "status": "Dummy",
+ "catatan": "Dipotong ke cakupan layer jalan + 1 km dan dikuantisasi 0,1 m untuk peramban."
+}

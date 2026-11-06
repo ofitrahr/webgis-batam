@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGMA Batam · QA Fitur Analisis</title>
+  <meta name="description" content="Prototipe QA fitur analisis WebGIS Infrastruktur BP Batam. Analisis dijalankan modul Python asli di peramban (Pyodide).">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f3a5f'/%3E%3Cpath d='M6 22l6-8 5 5 4-6 5 9' stroke='%23c9a227' stroke-width='2.5' fill='none'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+</head>
+<body>
+  <header class="kepala">
+    <div class="merek"><span class="logo">SIGMA</span> Batam <span class="sub">· Prototipe QA Fitur Analisis</span></div>
+    <div class="kanan-atas">
+      <span id="versi" class="kecil"></span>
+      <span id="py-pill" class="pill" title="Status mesin Python (Pyodide)">Python</span>
+    </div>
+  </header>
+
+  <main class="tata">
+    <aside class="samping">
+      <nav class="tab-bar" role="tablist">
+        <button class="tab aktif" data-tab="analisis">Analisis</button>
+        <button class="tab" data-tab="layer">Layer</button>
+        <button class="tab" data-tab="qa">QA</button>
+        <button class="tab" data-tab="info">Info</button>
+      </nav>
+      <section id="tab-analisis" class="tab-isi">
+        <div id="daftar-fitur" class="daftar-fitur"></div>
+        <div id="panel-fitur" class="panel-fitur"></div>
+      </section>
+      <section id="tab-layer" class="tab-isi" hidden></section>
+      <section id="tab-qa" class="tab-isi" hidden></section>
+      <section id="tab-info" class="tab-isi" hidden></section>
+    </aside>
+
+    <div class="peta-wadah">
+      <div id="peta"></div>
+      <div id="py-muat" class="py-muat">
+        <div id="py-status">Menyiapkan…</div>
+        <div class="bar"><div id="py-bar"></div></div>
+      </div>
+      <section id="hasil" class="hasil" hidden>
+        <div class="hasil-kepala">
+          <span class="hasil-judul"></span>
+          <span>
+            <button class="ikon lipat" title="Perkecil / perbesar">▁</button>
+            <button class="ikon tutup" title="Tutup">×</button>
+          </span>
+        </div>
+        <div class="hasil-badan"></div>
+      </section>
+    </div>
+  </main>
+  <div id="toast" class="toast-wadah" aria-live="polite"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

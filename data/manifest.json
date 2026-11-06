@@ -1,0 +1,218 @@
+{
+ "dibangun": "2026-11-06T19:17:47+07:00",
+ "modul_python": [
+  {
+   "paket": "01_ANALISIS_UMUM",
+   "file": "sigma_umum.py",
+   "sha": "c7c65cb4d3"
+  },
+  {
+   "paket": "01_ANALISIS_UMUM",
+   "file": "test_sigma_umum.py",
+   "sha": "58f3b6e2da"
+  }
+ ],
+ "jembatan_sha": "3e41ba1887",
+ "layer": [
+  {
+   "id": "kecamatan",
+   "label": "Batas Kecamatan",
+   "warna": "#1f3a5f",
+   "urut": 1,
+   "rfi": "A02",
+   "file": "data/kecamatan.geojson",
+   "jumlah": 12,
+   "geometri": "MultiPolygon",
+   "kolom": [
+    "kode",
+    "nama",
+    "sumber_geometri",
+    "atribut_dummy",
+    "luas_ha"
+   ],
+   "kolom_dummy": [
+    "kode"
+   ],
+   "sumber_geometri": [
+    "OSM © OpenStreetMap contributors (ODbL)"
+   ],
+   "status": "Riil sementara (OSM) + atribut dummy",
+   "ukuran_kb": 173
+  },
+  {
+   "id": "jalan",
+   "label": "Jaringan Jalan",
+   "warna": "#7f8c8d",
+   "urut": 2,
+   "rfi": "C01–C03",
+   "file": "data/jalan.geojson",
+   "jumlah": 1855,
+   "geometri": "LineString",
+   "kolom": [
+    "id_ruas",
+    "nama_ruas",
+    "klasifikasi",
+    "fungsi",
+    "status_kewenangan",
+    "jumlah_lajur",
+    "arah",
+    "tipe_perkerasan",
+    "kondisi",
+    "jenis_kerusakan",
+    "tgl_survei_kondisi",
+    "sumber_geometri",
+    "lebar_perkerasan_m",
+    "panjang_m",
+    "atribut_dummy",
+    "klasifikasi_catatan",
+    "kecamatan"
+   ],
+   "kolom_dummy": [
+    "fungsi",
+    "jenis_kerusakan",
+    "jumlah_lajur",
+    "kondisi",
+    "lebar_perkerasan_m",
+    "status_kewenangan",
+    "tgl_survei_kondisi",
+    "tipe_perkerasan"
+   ],
+   "sumber_geometri": [
+    "OSM © OpenStreetMap contributors (ODbL)"
+   ],
+   "status": "Riil sementara (OSM) + atribut dummy",
+   "ukuran_kb": 1499
+  },
+  {
+   "id": "drainase",
+   "label": "Jaringan Drainase",
+   "warna": "#2e86de",
+   "urut": 3,
+   "rfi": "D01, D02, D06",
+   "file": "data/drainase.geojson",
+   "jumlah": 2066,
+   "geometri": "LineString",
+   "kolom": [
+    "id_saluran",
+    "hierarki",
+    "jenis_saluran",
+    "material",
+    "bentuk",
+    "lebar_atas_m",
+    "lebar_bawah_m",
+    "tinggi_m",
+    "sumber_geometri",
+    "nama_osm",
+    "tipe_osm",
+    "sedimentasi_pct",
+    "kondisi",
+    "kapasitas_relatif",
+    "panjang_m",
+    "atribut_dummy",
+    "kecamatan"
+   ],
+   "kolom_dummy": [
+    "bentuk",
+    "hierarki",
+    "jenis_saluran",
+    "kapasitas_relatif",
+    "kondisi",
+    "lebar_atas_m",
+    "lebar_bawah_m",
+    "material",
+    "sedimentasi_pct",
+    "tinggi_m"
+   ],
+   "sumber_geometri": [
+    "DUMMY (offset tepi jalan OSM)",
+    "OSM © OpenStreetMap contributors (ODbL)"
+   ],
+   "status": "Riil sementara (OSM) + atribut dummy",
+   "ukuran_kb": 1641
+  },
+  {
+   "id": "pipa_spam",
+   "label": "Pipa SPAM",
+   "warna": "#c0392b",
+   "urut": 4,
+   "rfi": "E01",
+   "file": "data/pipa_spam.geojson",
+   "jumlah": 1855,
+   "geometri": "LineString",
+   "kolom": [
+    "id_pipa",
+    "jenis_pipa",
+    "material",
+    "diameter_mm",
+    "tahun_pasang",
+    "status",
+    "kedalaman_m",
+    "kondisi",
+    "sumber_geometri",
+    "atribut_dummy",
+    "panjang_m",
+    "kecamatan"
+   ],
+   "kolom_dummy": [
+    "diameter_mm",
+    "jenis_pipa",
+    "kedalaman_m",
+    "kondisi",
+    "material",
+    "status",
+    "tahun_pasang"
+   ],
+   "sumber_geometri": [
+    "DUMMY (offset tepi jalan OSM)"
+   ],
+   "status": "Dummy",
+   "ukuran_kb": 1331
+  },
+  {
+   "id": "genangan",
+   "label": "Titik Genangan",
+   "warna": "#8e44ad",
+   "urut": 5,
+   "rfi": "D07",
+   "file": "data/genangan.geojson",
+   "jumlah": 80,
+   "geometri": "Point",
+   "kolom": [
+    "id_genangan",
+    "tgl_kejadian",
+    "tinggi_cm",
+    "luas_ha",
+    "lama_jam",
+    "frekuensi_per_tahun",
+    "sumber_geometri",
+    "atribut_dummy",
+    "kecamatan"
+   ],
+   "kolom_dummy": [
+    "semua"
+   ],
+   "sumber_geometri": [
+    "DUMMY"
+   ],
+   "status": "Dummy",
+   "ukuran_kb": 23
+  }
+ ],
+ "dem": {
+  "file": "data/dem.bin",
+  "dtype": "int16-le",
+  "skala": 0.1,
+  "nodata": -32768,
+  "lebar": 946,
+  "tinggi": 915,
+  "x0": 376984.1122923933,
+  "y0": 132910.83804700698,
+  "res_x": 30.0,
+  "res_y": 30.0,
+  "crs": "EPSG:32648",
+  "datum_vertikal": "DUMMY (sintetis, tanpa datum)",
+  "sumber": "DEM DUMMY sintetis SIGMA Batam, seed 20261106; ganti DEMNAS/LiDAR (RFI-01 A05)",
+  "status": "Dummy",
+  "catatan": "Dipotong ke cakupan layer jalan + 1 km dan dikuantisasi 0,1 m untuk peramban."
+ }
+}
