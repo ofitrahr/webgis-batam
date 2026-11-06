@@ -115,8 +115,13 @@ export class Peta {
                  paint: { 'circle-color': WARNA_HASIL, 'circle-radius': 8, 'circle-stroke-color': '#000', 'circle-stroke-width': 1.5 } });
     m.addLayer({ id: 'lokasi-garis', type: 'line', source: 'lokasi', paint: { 'line-color': '#111', 'line-width': 2, 'line-dasharray': [2, 2] } });
     m.addLayer({ id: 'gambar-isi', type: 'fill', source: 'gambar', filter: ['==', ['geometry-type'], 'Polygon'], paint: { 'fill-color': '#e84393', 'fill-opacity': 0.15 } });
-    m.addLayer({ id: 'gambar-garis', type: 'line', source: 'gambar', filter: ['!=', ['geometry-type'], 'Point'],
-                 paint: { 'line-color': '#e84393', 'line-width': 2.5, 'line-dasharray': ['case', ['==', ['get', 'pratinjau'], true], ['literal', [2, 2]], ['literal', [1, 0]]] } });
+    // line-dasharray tidak menerima ekspresi data di MapLibre 4.x: garis tetap dan pratinjau dipisah.
+    m.addLayer({ id: 'gambar-garis', type: 'line', source: 'gambar',
+                 filter: ['all', ['!=', ['geometry-type'], 'Point'], ['!=', ['get', 'pratinjau'], true]],
+                 paint: { 'line-color': '#e84393', 'line-width': 2.5 } });
+    m.addLayer({ id: 'gambar-pratinjau', type: 'line', source: 'gambar',
+                 filter: ['all', ['!=', ['geometry-type'], 'Point'], ['==', ['get', 'pratinjau'], true]],
+                 paint: { 'line-color': '#e84393', 'line-width': 2.5, 'line-dasharray': [2, 2] } });
     m.addLayer({ id: 'gambar-titik', type: 'circle', source: 'gambar', filter: ['==', ['geometry-type'], 'Point'],
                  paint: { 'circle-color': '#fff', 'circle-radius': 4.5, 'circle-stroke-color': '#e84393', 'circle-stroke-width': 2 } });
   }
