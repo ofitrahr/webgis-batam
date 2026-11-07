@@ -126,7 +126,7 @@ function renderInfo() {
     h('h3', {}, 'Tentang prototipe ini'),
     h('p', {}, 'Prototipe QA fitur analisis WebGIS Infrastruktur BP Batam (SIGMA). Semua analisis dijalankan oleh modul Python yang sama dengan yang diserahkan ke tim IT, di dalam peramban melalui Pyodide; tidak ada server.'),
     h('p', { class: 'peringatan' }, 'Data contoh: geometri sebagian dari OpenStreetMap, sebagian besar atribut dan DEM adalah DUMMY. Hasil hanya untuk menguji alur dan perilaku fitur, BUKAN untuk keputusan.'),
-    h('p', { class: 'kecil' }, 'Bangunan 3D LOD1 sementara dari sumber terbuka (tapak OSM/Overture, tinggi Google Open Buildings 2.5D 2023). Bukan tapak RBI BP Batam; nanti diganti hasil survei LiDAR.'),
+    h('p', { class: 'kecil' }, 'Bangunan 3D LOD1 sementara dari sumber terbuka (tapak OSM/Overture, ditambah Microsoft ML Building Footprints di Batu Aji & Sagulung; tinggi Google Open Buildings 2.5D 2023). Bukan tapak RBI BP Batam; nanti diganti hasil survei LiDAR.'),
     h('h4', {}, 'Build'),
     h('ul', { class: 'kecil' }, h('li', {}, 'Dibangun: ' + new Date(m.dibangun).toLocaleString('id-ID')),
       ...m.modul_python.map(x => h('li', {}, h('code', {}, `${x.file}`), ` (${x.paket}) sha ${x.sha}`)),
@@ -136,7 +136,7 @@ function renderInfo() {
       h('tbody', {}, m.layer.map(l => h('tr', {}, h('td', {}, l.label), h('td', {}, l.status), h('td', {}, l.rfi), h('td', { class: 'kecil' }, l.kolom_dummy.join(', ') || '—'))),
         h('tr', {}, h('td', {}, 'DEM'), h('td', {}, m.dem.status), h('td', {}, 'A05'), h('td', { class: 'kecil' }, m.dem.sumber)),
         m.bangunan ? h('tr', {}, h('td', {}, 'Bangunan 3D'), h('td', {}, m.bangunan.status), h('td', {}, 'A07–A08'), h('td', { class: 'kecil' }, `${m.bangunan.sumber}; ${fmtAngka(m.bangunan.jumlah)} bangunan, ${fmtAngka(m.bangunan.mb, 0)} MB`)) : null)),
-    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan, sungai, dan tapak bangunan © OpenStreetMap contributors / Overture Maps (ODbL); tinggi bangunan Google Open Buildings 2.5D (CC-BY 4.0).'));
+    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan, sungai, dan tapak bangunan © OpenStreetMap contributors / Overture Maps / Microsoft (ODbL); tinggi bangunan Google Open Buildings 2.5D (CC-BY 4.0).'));
 }
 
 // ------------------------------------------------------------------ awal
@@ -149,7 +149,17 @@ async function mulai() {
   app.manifest = await (await fetch('data/manifest.json', { cache: 'no-cache' })).json();
   app.layerMeta = app.manifest.layer;
   $('#versi').textContent = 'build ' + new Date(app.manifest.dibangun).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
-  app.peta = new Peta('peta');
+  // Mode peta: ?mode=2d|3d di URL, lalu pilihan terakhir pengguna, bawaan 3D.
+  let modeAwal = new URLSearchParams(location.search).get('mode');
+  if (!['2d', '3d'].includes(modeAwal)) { try { modeAwal = localStorage.getItem('sigma-mode-peta'); } catch { modeAwal = null; } }
+  const tandaiMode = mode => {
+    document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('aktif', b.dataset.mode === mode));
+    document.querySelectorAll('.kontrol-pandangan .hanya-3d').forEach(b => { b.hidden = mode === '2d'; });
+    try { localStorage.setItem('sigma-mode-peta', mode); } catch { /* penyimpanan tidak tersedia */ }
+  };
+  app.peta = new Peta('peta', { mode: modeAwal === '2d' ? '2d' : '3d', onMode: tandaiMode });
+  tandaiMode(app.peta.mode);
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => app.peta.gantiMode(b.dataset.mode)));
   app.qa = new TabQA($('#tab-qa'), app);
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => gantiTab(t.dataset.tab)));
   $('#hasil .tutup').addEventListener('click', () => app.tutupHasil());

@@ -1,5 +1,5 @@
 {
- "dibangun": "2026-11-07T09:00:11+07:00",
+ "dibangun": "2026-11-07T10:24:08+07:00",
  "modul_python": [
   {
    "paket": "01_ANALISIS_UMUM",
@@ -218,71 +218,71 @@
  "bangunan": {
   "url": "tiles/tileset_batam.json",
   "label": "Bangunan 3D LOD1 (sementara)",
-  "jumlah": 169486,
-  "mb": 139.9,
-  "versi": "lod1-kota-batam-202611070900",
+  "jumlah": 193769,
+  "mb": 170.6,
+  "versi": "lod1-kota-batam-202611071023",
   "status": "Sumber terbuka sementara",
-  "sumber": "Tapak OSM/Overture (ODbL), tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0)",
+  "sumber": "Tapak OSM/Overture + Microsoft Global ML Building Footprints untuk Batu Aji & Sagulung (ODbL), tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0)",
   "per_kecamatan": [
    {
     "nama": "Batam Kota",
     "bangunan": 26115,
-    "mb": 21.7
+    "mb": 22.5
    },
    {
     "nama": "Batu Aji",
-    "bangunan": 757,
-    "mb": 0.7
+    "bangunan": 9818,
+    "mb": 9.9
    },
    {
     "nama": "Batu Ampar",
     "bangunan": 11739,
-    "mb": 9.7
+    "mb": 10.1
    },
    {
     "nama": "Belakang Padang",
     "bangunan": 1856,
-    "mb": 1.6
+    "mb": 1.7
    },
    {
     "nama": "Bengkong",
     "bangunan": 24017,
-    "mb": 19.4
+    "mb": 20.1
    },
    {
     "nama": "Bulang",
     "bangunan": 3675,
-    "mb": 3.1
+    "mb": 3.2
    },
    {
     "nama": "Galang",
     "bangunan": 8538,
-    "mb": 7.0
+    "mb": 7.4
    },
    {
     "nama": "Lubuk Baja",
     "bangunan": 11773,
-    "mb": 9.7
+    "mb": 10.1
    },
    {
     "nama": "Nongsa",
     "bangunan": 24675,
-    "mb": 20.6
+    "mb": 21.6
    },
    {
     "nama": "Sagulung",
-    "bangunan": 1207,
-    "mb": 1.0
+    "bangunan": 16429,
+    "mb": 16.7
    },
    {
     "nama": "Sei Beduk",
     "bangunan": 17925,
-    "mb": 15.1
+    "mb": 15.8
    },
    {
     "nama": "Sekupang",
     "bangunan": 37209,
-    "mb": 30.3
+    "mb": 31.5
    }
   ]
  }

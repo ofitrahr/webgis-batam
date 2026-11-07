@@ -39,8 +39,12 @@
     <div class="peta-wadah">
       <div id="peta"></div>
       <div class="kontrol-pandangan">
-        <button class="ikon-teks" data-pandangan="miring" title="Pandangan miring 3D">3D</button>
-        <button class="ikon-teks" data-pandangan="atas" title="Pandangan dari atas">Atas</button>
+        <div class="segmen-mode" role="group" aria-label="Mode peta">
+          <button class="ikon-teks" data-mode="2d" title="Peta datar 2D (Web Mercator)">2D</button>
+          <button class="ikon-teks" data-mode="3d" title="Globe 3D dengan bangunan">3D</button>
+        </div>
+        <button class="ikon-teks hanya-3d" data-pandangan="miring" title="Pandangan miring 45°">Miring</button>
+        <button class="ikon-teks hanya-3d" data-pandangan="atas" title="Pandangan tegak dari atas">Atas</button>
       </div>
       <div id="py-muat" class="py-muat">
         <div id="py-status">Menyiapkan…</div>

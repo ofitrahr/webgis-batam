@@ -25,11 +25,18 @@ di-QA adalah perilaku kode yang benar-benar akan dipakai, bukan tiruan JavaScrip
 
 ## Tampilan 3D dan bangunan
 
-Peta memakai CesiumJS (sesuai KAK IV.1.e.2).ii: tampilan 2D/3D dengan library Cesium). Tombol **3D** / **Atas**
-di kanan atas mengganti pandangan miring dan pandangan dari atas; seret dengan klik kanan atau Ctrl+seret untuk memiringkan.
+Peta memakai CesiumJS (sesuai KAK IV.1.e.2).ii: tampilan 2D/3D dengan library Cesium). Di kanan atas:
+
+- **2D / 3D** mengganti globe 3D dengan peta datar 2D (Web Mercator) tanpa memuat ulang data. Area yang sedang dilihat
+  dipertahankan, dan pilihan terakhir diingat di peramban. Mode awal juga bisa dipaksa lewat URL: `?mode=2d` atau `?mode=3d`.
+  Di 2D, bangunan tampil sebagai tapak berwarna menurut tinggi; semua fitur analisis, popup, dan alat gambar tetap berfungsi.
+- **Miring / Atas** (hanya di 3D) mengganti pandangan miring 45° dan pandangan tegak dari atas. Seret dengan klik kanan
+  atau Ctrl+seret untuk memiringkan secara bebas.
 
 Bangunan 3D adalah **LOD1 sementara dari sumber terbuka**: tapak OpenStreetMap/Overture (termasuk Google Open Buildings
-dan Microsoft ML Buildings, ODbL) dengan tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0). Dibangun oleh pipeline
+dan Microsoft ML Buildings, ODbL) dengan tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0). Di Batu Aji dan Sagulung,
+tempat Overture hampir kosong, tapak ditambah langsung dari Microsoft Global ML Building Footprints (ODbL; tahap `01c`),
+dengan duplikat terhadap Overture dibuang. Atribut `sumber_tapak` pada popup bangunan menunjukkan asal tiap tapak. Dibangun oleh pipeline
 `pilot-3d-teluk-tering` yang dijalankan tanpa tahap konflasi RBI, di folder `SOURCE CODE PROTOTYPE/pilot-3d-terbuka`.
 **Tile berbasis RBI 1:5.000 BP Batam sengaja tidak dipakai karena repo ini publik.** Nanti diganti hasil survei LiDAR
 per kecamatan (cukup mengganti folder `tiles/<kecamatan>/`).

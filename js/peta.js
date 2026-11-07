@@ -33,14 +33,19 @@ const GAYA_BANGUNAN = {
 const lebarJalan = p => (p.klasifikasi === 'arteri' ? 3.2 : p.klasifikasi === 'kolektor' ? 2.2 : 1.4);
 
 export class Peta {
-  constructor(el) {
+  // opsi.mode: '3d' (bawaan) | '2d'. opsi.onMode(mode) dipanggil setiap kali mode selesai berganti.
+  constructor(el, opsi = {}) {
     const Cs = C();
     el = typeof el === 'string' ? document.getElementById(el) : el;
+    this.onMode = opsi.onMode;
     this.viewer = new Cs.Viewer(el, {
       baseLayer: new Cs.ImageryLayer(DASAR[DASAR_AWAL].buat()),
       baseLayerPicker: false, geocoder: false, timeline: false, animation: false, homeButton: true,
       sceneModePicker: false, navigationHelpButton: false, infoBox: false, selectionIndicator: false,
       fullscreenButton: false, terrainProvider: new Cs.EllipsoidTerrainProvider(),
+      // Mode 2D memakai Web Mercator seperti peta web pada umumnya (ubin dasar juga Web Mercator).
+      mapProjection: new Cs.WebMercatorProjection(),
+      sceneMode: opsi.mode === '2d' ? Cs.SceneMode.SCENE2D : Cs.SceneMode.SCENE3D,
     });
     const v = this.viewer, sc = v.scene;
     sc.globe.depthTestAgainstTerrain = true;
@@ -52,8 +57,11 @@ export class Peta {
     const k = KAMERA_AWAL;
     this.awal = { destination: Cs.Cartesian3.fromDegrees(k.lon, k.lat, k.tinggi),
                   orientation: { heading: Cs.Math.toRadians(k.heading), pitch: Cs.Math.toRadians(k.pitch), roll: 0 } };
-    v.camera.setView(this.awal);
-    v.homeButton.viewModel.command.beforeExecute.addEventListener(e => { e.cancel = true; v.camera.flyTo(this.awal); });
+    this.awal2d = { destination: Cs.Cartesian3.fromDegrees(k.lon, 1.06, 42000) };
+    v.camera.setView(this.mode === '2d' ? this.awal2d : this.awal);
+    v.homeButton.viewModel.command.beforeExecute.addEventListener(e => {
+      e.cancel = true; v.camera.flyTo(this.mode === '2d' ? this.awal2d : this.awal);
+    });
 
     this.layerData = {};     // id -> {meta, geojson, ds (CustomDataSource), perFitur: Map(_i -> [entity])}
     this.filterQuery = {};   // id -> array indeks (U2)
@@ -139,7 +147,8 @@ export class Peta {
   // ---------------------------------------------------------------- bangunan 3D
   async muatBangunan(url, opsi = {}) {
     const Cs = C();
-    const ts = await Cs.Cesium3DTileset.fromUrl(url, { maximumScreenSpaceError: opsi.sse ?? 16 });
+    // projectTo2D: bangunan ikut diproyeksikan dengan tepat saat mode 2D (tampil sebagai tapak berwarna tinggi).
+    const ts = await Cs.Cesium3DTileset.fromUrl(url, { maximumScreenSpaceError: opsi.sse ?? 16, projectTo2D: true });
     this.viewer.scene.primitives.add(ts);
     this.bangunan = ts;
     this.gayaBangunan('tinggi');
@@ -175,7 +184,10 @@ export class Peta {
     this._penangan = new Cs.ScreenSpaceEventHandler(this.viewer.scene.canvas);
     this._penangan.setInputAction(ev => {
       if (this.klikDiblok) return;
-      const p = this.viewer.scene.pick(ev.position);
+      // Di 2D semua objek datar sehingga isian poligon (mis. kecamatan) bisa menutupi bangunan:
+      // ambil beberapa objek di bawah kursor dan pilih menurut prioritas titik > garis > bangunan > isian poligon.
+      const skor = o => (o instanceof Cs.Cesium3DTileFeature ? 2 : o.id?.point ? 0 : o.id?.polyline ? 1 : o.id?.polygon ? 3 : 4);
+      const p = this.viewer.scene.drillPick(ev.position, 6).sort((a, b) => skor(a) - skor(b))[0];
       if (!p) { this.tutupPopup(); return; }
       if (p instanceof Cs.Cesium3DTileFeature) {
         const ids = p.getPropertyIds();
@@ -199,7 +211,7 @@ export class Peta {
       const nilai = v === null || v === undefined || v === 'null' ? '—' : typeof v === 'number' ? fmtAngka(v, 2) : v;
       return `<tr><th>${esc(k)}</th><td>${esc(nilai)}${d ? ' <span class="lencana dummy">dummy</span>' : ''}</td></tr>`;
     }).join('');
-    const catatan = fitur3d ? '<div class="kecil redup">Tinggi dari Open Buildings 2.5D (perkiraan); tapak OSM/Overture.</div>' : '';
+    const catatan = fitur3d ? '<div class="kecil redup">Tinggi dari Open Buildings 2.5D (perkiraan); tapak OSM/Overture/Microsoft (lihat sumber_tapak).</div>' : '';
     el.innerHTML = `<button class="ikon tutup-popup" title="Tutup">×</button><b>${esc(judul)}</b><table>${baris}</table>${catatan}`;
     el.querySelector('.tutup-popup').onclick = () => this.tutupPopup();
     const w = this.viewer.container.clientWidth;
@@ -266,8 +278,46 @@ export class Peta {
       { duration: 1.2, offset: new Cs.HeadingPitchRange(0, Cs.Math.toRadians(-40), jarak) });
   }
 
-  // Pandangan tegak lurus (atas) <-> miring 45°, mempertahankan titik tengah layar.
+  // ---------------------------------------------------------------- mode 2D / 3D
+  get mode() { return this.viewer.scene.mode === C().SceneMode.SCENE2D ? '2d' : '3d'; }
+
+  // Ganti globe 3D <-> peta datar 2D tanpa memuat ulang data; area yang sedang dilihat dipertahankan.
+  gantiMode(mode, durasi = 0.8) {
+    const Cs = C(), v = this.viewer, sc = v.scene, cam = v.camera;
+    if (mode === this.mode || sc.mode === Cs.SceneMode.MORPHING) return;
+    this.tutupPopup();
+    const lebar = v.canvas.clientWidth, tinggiLayar = v.canvas.clientHeight;
+    const tengah = this._posisi(new Cs.Cartesian2(lebar / 2, tinggiLayar / 2)) || [KAMERA_AWAL.lon, 1.06];
+    // Lebar bentang yang terlihat (meter), dipakai untuk menyamakan skala sesudah berganti mode.
+    let bentang;
+    if (sc.mode === Cs.SceneMode.SCENE2D) bentang = cam.frustum.right - cam.frustum.left;
+    else {
+      const jarak = Cs.Cartesian3.distance(cam.positionWC, Cs.Cartesian3.fromDegrees(tengah[0], tengah[1]));
+      bentang = 2 * jarak * Math.tan(cam.frustum.fov / 2);
+    }
+    // Cesium memasang kameranya sendiri sesudah morphComplete: kamera kita dipasang satu frame kemudian.
+    const sesudahMorph = () => {
+      sc.morphComplete.removeEventListener(sesudahMorph);
+      const sekali = () => { sc.postRender.removeEventListener(sekali); sesudah(); };
+      sc.postRender.addEventListener(sekali);
+      sc.requestRender();
+    };
+    const sesudah = () => {
+      if (mode === '2d') cam.setView({ destination: Cs.Cartesian3.fromDegrees(tengah[0], tengah[1], Math.max(bentang, 300)) });
+      else {
+        const jarak = Math.max(bentang / (2 * Math.tan(cam.frustum.fov / 2)), 400);
+        cam.flyToBoundingSphere(new Cs.BoundingSphere(Cs.Cartesian3.fromDegrees(tengah[0], tengah[1]), 10),
+          { duration: 0.8, offset: new Cs.HeadingPitchRange(0, Cs.Math.toRadians(-45), jarak) });
+      }
+      this.onMode?.(mode);
+    };
+    sc.morphComplete.addEventListener(sesudahMorph);
+    if (mode === '2d') sc.morphTo2D(durasi); else sc.morphTo3D(durasi);
+  }
+
+  // Pandangan tegak lurus (atas) <-> miring 45°, mempertahankan titik tengah layar (hanya mode 3D).
   pandangan(mode) {
+    if (this.mode === '2d') return;
     const Cs = C(), v = this.viewer, cam = v.camera;
     const tengah = this._posisi(new Cs.Cartesian2(v.canvas.clientWidth / 2, v.canvas.clientHeight / 2)) || [KAMERA_AWAL.lon, 1.08];
     const jarak = Math.max(cam.positionCartographic.height * (mode === 'atas' ? 1 : 1.4), 500);
