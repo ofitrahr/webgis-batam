@@ -1,14 +1,16 @@
 // peta.js — Peta MapLibre: peta dasar, layer data, popup atribut, layer hasil, dan alat gambar.
 import { esc, fmtAngka } from './ui.js';
 
+// Peta dasar tanpa kunci API. (CARTO kini mengembalikan ubin "API KEY REQUIRED".)
 const DASAR = {
-  positron: { label: 'Terang (CARTO)', tiles: ['a', 'b', 'c', 'd'].map(s => `https://${s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png`),
-              attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/">CARTO</a>' },
-  osm: { label: 'OpenStreetMap', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+  abu: { label: 'Abu-abu terang (Esri)', maxzoom: 16, tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'],
+         attribution: 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors' },
+  osm: { label: 'OpenStreetMap', maxzoom: 19, tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' },
-  citra: { label: 'Citra (Esri)', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+  citra: { label: 'Citra (Esri)', maxzoom: 19, tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
            attribution: 'Citra © Esri, Maxar, Earthstar Geographics' },
 };
+const DASAR_AWAL = 'abu';
 const KOSONG = { type: 'FeatureCollection', features: [] };
 const WARNA_HASIL = '#f39c12';
 
@@ -16,8 +18,8 @@ export class Peta {
   constructor(el) {
     const sources = {}, layers = [];
     for (const [id, d] of Object.entries(DASAR)) {
-      sources['dasar-' + id] = { type: 'raster', tiles: d.tiles, tileSize: 256, attribution: d.attribution, maxzoom: 19 };
-      layers.push({ id: 'dasar-' + id, type: 'raster', source: 'dasar-' + id, layout: { visibility: id === 'positron' ? 'visible' : 'none' } });
+      sources['dasar-' + id] = { type: 'raster', tiles: d.tiles, tileSize: 256, attribution: d.attribution, maxzoom: d.maxzoom };
+      layers.push({ id: 'dasar-' + id, type: 'raster', source: 'dasar-' + id, layout: { visibility: id === DASAR_AWAL ? 'visible' : 'none' } });
     }
     this.map = new maplibregl.Map({
       container: el, style: { version: 8, sources, layers },

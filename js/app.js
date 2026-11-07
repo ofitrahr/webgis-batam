@@ -117,7 +117,7 @@ function renderInfo() {
     h('table', { class: 'tabel kecil' }, h('thead', {}, h('tr', {}, ['Layer', 'Status', 'RFI-01', 'Kolom dummy'].map(x => h('th', {}, x)))),
       h('tbody', {}, m.layer.map(l => h('tr', {}, h('td', {}, l.label), h('td', {}, l.status), h('td', {}, l.rfi), h('td', { class: 'kecil' }, l.kolom_dummy.join(', ') || '—'))),
         h('tr', {}, h('td', {}, 'DEM'), h('td', {}, m.dem.status), h('td', {}, 'A05'), h('td', { class: 'kecil' }, m.dem.sumber)))),
-    h('p', { class: 'kecil redup' }, 'Peta dasar © OpenStreetMap contributors, © CARTO, citra © Esri. Data jalan dan sungai © OpenStreetMap contributors (ODbL).'));
+    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan dan sungai © OpenStreetMap contributors (ODbL).'));
 }
 
 // ------------------------------------------------------------------ awal

@@ -65,7 +65,7 @@ export class TabQA {
         const u = f.kriteria ? this._ringkasUji(f.kode) : null, mn = f.kriteria ? this._ringkasManual(f) : null;
         return h('tr', { class: f.kriteria ? '' : 'redup' },
           h('td', { class: 'mono' }, f.kode), h('td', {}, f.nama),
-          h('td', {}, h('span', { class: 'lencana ' + (f.kriteria ? 'siap' : 'belum') }, f.status)),
+          h('td', {}, h('span', { class: 'lencana ' + (f.kriteria ? 'siap' : 'belum'), title: f.status }, f.kriteria ? f.status : 'Belum')),
           h('td', { class: 'mono', title: 'lulus / dijalankan (dilewati tidak dihitung)' },
             u ? `${u.lulus}/${u.total - u.lewat}${u.gagal ? ' ✗' + u.gagal : ''}${u.lewat ? ` (+${u.lewat} lewat)` : ''}` : f.kriteria ? '—' : ''),
           h('td', { class: 'mono' }, mn ? `${mn.sesuai}✓ ${mn.tidak}✗ ${mn.belum}·${mn.usang ? ' ⟳' + mn.usang : ''}` : ''));

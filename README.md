@@ -78,7 +78,7 @@ Sumber kebenaran tetap di `INTERNAL-WEBGIS BATAM/ANALISIS/NN_<PAKET>/` (di luar 
 
 - Pyodide 0.27.7 (numpy, pandas, shapely 2.0, pyproj 3.6, geopandas 1.0.1; geopandas dipasang tanpa fiona/GDAL agar ringan)
 - MapLibre GL JS 4.7.1
-- Peta dasar: CARTO Positron, OpenStreetMap, Esri World Imagery
+- Peta dasar (tanpa kunci API): Esri World Light Gray Canvas, OpenStreetMap, Esri World Imagery
 
 Muat pertama ±25–40 MB (paket Python, di-cache peramban setelahnya). Peta dan data tampil lebih dulu;
 tombol analisis aktif setelah mesin Python siap.
@@ -86,4 +86,4 @@ tombol analisis aktif setelah mesin Python siap.
 ## Atribusi
 
 Data jalan dan sungai © OpenStreetMap contributors (ODbL). Peta dasar © OpenStreetMap contributors,
-© CARTO; citra © Esri, Maxar, Earthstar Geographics.
+Esri, HERE, Garmin; citra © Esri, Maxar, Earthstar Geographics.

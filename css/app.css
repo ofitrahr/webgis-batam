@@ -100,6 +100,7 @@ select:focus, input:focus, textarea:focus { outline: 2px solid #c9a22755; border
 /* ---------- panel hasil ---------- */
 .hasil { position: absolute; left: 12px; right: 12px; bottom: 28px; max-height: var(--hasil-tinggi); background: var(--panel); border-radius: 10px;
   box-shadow: 0 6px 24px #0003; display: flex; flex-direction: column; z-index: 4; }
+.hasil[hidden] { display: none; }
 .hasil.kecil .hasil-badan { display: none; }
 .hasil-kepala { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 8px 14px; border-bottom: 1px solid var(--garis); font-weight: 600; gap: 10px; }
 .hasil-judul { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -163,3 +164,12 @@ select:focus, input:focus, textarea:focus { outline: 2px solid #c9a22755; border
   .dua-kolom { grid-template-columns: 1fr; }
   :root { --hasil-tinggi: 34vh; }
 }
+
+/* tabel ringkasan QA muat di lebar panel samping */
+#tab-qa .tabel { table-layout: fixed; }
+#tab-qa .tabel th:nth-child(1) { width: 34px; }
+#tab-qa .tabel th:nth-child(3) { width: 78px; }
+#tab-qa .tabel th:nth-child(4) { width: 62px; }
+#tab-qa .tabel th:nth-child(5) { width: 64px; }
+#tab-qa .tabel td { overflow-wrap: anywhere; }
+#tab-qa .tabel .lencana { white-space: normal; text-align: center; }
