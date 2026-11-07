@@ -35,8 +35,8 @@ Peta memakai CesiumJS (sesuai KAK IV.1.e.2).ii: tampilan 2D/3D dengan library Ce
 
 Bangunan 3D adalah **LOD1 sementara dari sumber terbuka**: tapak OpenStreetMap/Overture (termasuk Google Open Buildings
 dan Microsoft ML Buildings, ODbL) dengan tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0). Di Batu Aji dan Sagulung,
-tempat Overture hampir kosong, tapak ditambah langsung dari Microsoft Global ML Building Footprints (ODbL; tahap `01c`),
-dengan duplikat terhadap Overture dibuang. Atribut `sumber_tapak` pada popup bangunan menunjukkan asal tiap tapak. Dibangun oleh pipeline
+tempat Overture hampir kosong, tapak ditambah langsung dari Microsoft Global ML Building Footprints (ODbL) lalu Google Open Buildings v3
+(confidence ≥ 0,70; CC-BY 4.0 / ODbL) lewat tahap `01c`, dengan duplikat dibuang berlapis (Overture → Microsoft → Google). Atribut `sumber_tapak` pada popup bangunan menunjukkan asal tiap tapak. Dibangun oleh pipeline
 `pilot-3d-teluk-tering` yang dijalankan tanpa tahap konflasi RBI, di folder `SOURCE CODE PROTOTYPE/pilot-3d-terbuka`.
 **Tile berbasis RBI 1:5.000 BP Batam sengaja tidak dipakai karena repo ini publik.** Nanti diganti hasil survei LiDAR
 per kecamatan (cukup mengganti folder `tiles/<kecamatan>/`).

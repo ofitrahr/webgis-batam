@@ -164,7 +164,7 @@ def salin_bangunan(web3d: Path) -> dict | None:
     return {"url": "tiles/tileset_batam.json", "label": "Bangunan 3D LOD1 (sementara)", "jumlah": n, "mb": round(mb, 1),
             "versi": json.loads(induk.read_text(encoding="utf-8"))["asset"].get("tilesetVersion", ""),
             "status": "Sumber terbuka sementara",
-            "sumber": "Tapak OSM/Overture + Microsoft Global ML Building Footprints untuk Batu Aji & Sagulung (ODbL), tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0)",
+            "sumber": "Tapak OSM/Overture + Microsoft Global ML Building Footprints (ODbL) dan Google Open Buildings v3 (CC-BY 4.0) untuk Batu Aji & Sagulung, tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0)",
             "per_kecamatan": [{"nama": k["nama"], "bangunan": k["bangunan"], "mb": k["mb"]} for k in info]}
 
 

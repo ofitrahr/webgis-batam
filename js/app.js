@@ -126,7 +126,7 @@ function renderInfo() {
     h('h3', {}, 'Tentang prototipe ini'),
     h('p', {}, 'Prototipe QA fitur analisis WebGIS Infrastruktur BP Batam (SIGMA). Semua analisis dijalankan oleh modul Python yang sama dengan yang diserahkan ke tim IT, di dalam peramban melalui Pyodide; tidak ada server.'),
     h('p', { class: 'peringatan' }, 'Data contoh: geometri sebagian dari OpenStreetMap, sebagian besar atribut dan DEM adalah DUMMY. Hasil hanya untuk menguji alur dan perilaku fitur, BUKAN untuk keputusan.'),
-    h('p', { class: 'kecil' }, 'Bangunan 3D LOD1 sementara dari sumber terbuka (tapak OSM/Overture, ditambah Microsoft ML Building Footprints di Batu Aji & Sagulung; tinggi Google Open Buildings 2.5D 2023). Bukan tapak RBI BP Batam; nanti diganti hasil survei LiDAR.'),
+    h('p', { class: 'kecil' }, 'Bangunan 3D LOD1 sementara dari sumber terbuka (tapak OSM/Overture, ditambah Microsoft ML Building Footprints dan Google Open Buildings v3 di Batu Aji & Sagulung; tinggi Google Open Buildings 2.5D 2023). Bukan tapak RBI BP Batam; nanti diganti hasil survei LiDAR.'),
     h('h4', {}, 'Build'),
     h('ul', { class: 'kecil' }, h('li', {}, 'Dibangun: ' + new Date(m.dibangun).toLocaleString('id-ID')),
       ...m.modul_python.map(x => h('li', {}, h('code', {}, `${x.file}`), ` (${x.paket}) sha ${x.sha}`)),
@@ -136,7 +136,7 @@ function renderInfo() {
       h('tbody', {}, m.layer.map(l => h('tr', {}, h('td', {}, l.label), h('td', {}, l.status), h('td', {}, l.rfi), h('td', { class: 'kecil' }, l.kolom_dummy.join(', ') || '—'))),
         h('tr', {}, h('td', {}, 'DEM'), h('td', {}, m.dem.status), h('td', {}, 'A05'), h('td', { class: 'kecil' }, m.dem.sumber)),
         m.bangunan ? h('tr', {}, h('td', {}, 'Bangunan 3D'), h('td', {}, m.bangunan.status), h('td', {}, 'A07–A08'), h('td', { class: 'kecil' }, `${m.bangunan.sumber}; ${fmtAngka(m.bangunan.jumlah)} bangunan, ${fmtAngka(m.bangunan.mb, 0)} MB`)) : null)),
-    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan, sungai, dan tapak bangunan © OpenStreetMap contributors / Overture Maps / Microsoft (ODbL); tinggi bangunan Google Open Buildings 2.5D (CC-BY 4.0).'));
+    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan, sungai, dan tapak bangunan © OpenStreetMap contributors / Overture Maps / Microsoft (ODbL), Google Open Buildings v3 (CC-BY 4.0); tinggi bangunan Google Open Buildings 2.5D (CC-BY 4.0).'));
 }
 
 // ------------------------------------------------------------------ awal

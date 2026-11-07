@@ -211,7 +211,7 @@ export class Peta {
       const nilai = v === null || v === undefined || v === 'null' ? '—' : typeof v === 'number' ? fmtAngka(v, 2) : v;
       return `<tr><th>${esc(k)}</th><td>${esc(nilai)}${d ? ' <span class="lencana dummy">dummy</span>' : ''}</td></tr>`;
     }).join('');
-    const catatan = fitur3d ? '<div class="kecil redup">Tinggi dari Open Buildings 2.5D (perkiraan); tapak OSM/Overture/Microsoft (lihat sumber_tapak).</div>' : '';
+    const catatan = fitur3d ? '<div class="kecil redup">Tinggi dari Open Buildings 2.5D (perkiraan); asal tapak lihat sumber_tapak.</div>' : '';
     el.innerHTML = `<button class="ikon tutup-popup" title="Tutup">×</button><b>${esc(judul)}</b><table>${baris}</table>${catatan}`;
     el.querySelector('.tutup-popup').onclick = () => this.tutupPopup();
     const w = this.viewer.container.clientWidth;
