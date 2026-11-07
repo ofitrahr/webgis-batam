@@ -12,7 +12,8 @@ Yang dilakukan:
   2. Mengekspor layer GeoPackage data contoh ke data/<layer>.geojson (koordinat 6 desimal).
   3. Mengekspor DEM ke data/dem.bin (int16, desimeter, little-endian) + data/dem.json (metadata),
      dipotong ke cakupan layer jalan agar ringan dimuat peramban.
-  4. Menulis data/manifest.json (daftar layer, status data, versi build, daftar modul Python).
+  4. Menyalin 3D Tiles bangunan versi sumber terbuka (pilot-3d-terbuka) ke tiles/.
+  5. Menulis data/manifest.json (daftar layer, status data, bangunan 3D, versi build, modul Python).
 
 Sumber kebenaran tetap folder ANALISIS. Jangan menyunting py/ secara langsung.
 """
@@ -138,9 +139,39 @@ def ekspor_dem(tif: Path, gpkg: Path) -> dict:
     return meta
 
 
+TILES3D_BAWAAN = REPO.parent / "INTERNAL-WEBGIS BATAM" / "SOURCE CODE PROTOTYPE" / "pilot-3d-terbuka" / "web"
+
+
+def salin_bangunan(web3d: Path) -> dict | None:
+    """Salin 3D Tiles bangunan (versi sumber terbuka, tanpa RBI) ke tiles/ dan kembalikan metadata manifest.
+
+    Sumber: pilot-3d-terbuka (pipeline pilot 3D dijalankan tanpa tahap konflasi RBI 01b; lalu 07_tileset_kota.py).
+    JANGAN mengarahkan ke pilot-3d-teluk-tering: tapaknya memakai RBI BP Batam dan repo ini publik.
+    """
+    induk = web3d / "tiles" / "tileset_batam.json"
+    if not induk.exists():
+        print("  (dilewati: tileset_batam.json belum ada; jalankan pipeline 3D + 07_tileset_kota.py)")
+        return None
+    tujuan = REPO / "tiles"
+    if tujuan.exists():
+        shutil.rmtree(tujuan)
+    shutil.copytree(web3d / "tiles", tujuan, ignore=shutil.ignore_patterns("teluk-tering"))
+    for f in tujuan.glob("*/tileset.json"):  # label versi bawaan pipeline menyebut RBI; versi ini tanpa RBI
+        f.write_text(f.read_text(encoding="utf-8").replace("lod1-rbi-overture", "lod1-terbuka"), encoding="utf-8")
+    info = json.loads((web3d / "data" / "kecamatan.json").read_text(encoding="utf-8"))
+    n, mb = sum(k["bangunan"] for k in info), sum(k["mb"] for k in info)
+    print(f"  tiles/  {len(info)} kecamatan, {n} bangunan, {mb:.0f} MB")
+    return {"url": "tiles/tileset_batam.json", "label": "Bangunan 3D LOD1 (sementara)", "jumlah": n, "mb": round(mb, 1),
+            "versi": json.loads(induk.read_text(encoding="utf-8"))["asset"].get("tilesetVersion", ""),
+            "status": "Sumber terbuka sementara",
+            "sumber": "Tapak OSM/Overture (ODbL), tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0)",
+            "per_kecamatan": [{"nama": k["nama"], "bangunan": k["bangunan"], "mb": k["mb"]} for k in info]}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--analisis", type=Path, default=ANALISIS_BAWAAN)
+    ap.add_argument("--tiles3d", type=Path, default=TILES3D_BAWAAN, help="folder web/ hasil pipeline 3D sumber terbuka")
     ap.add_argument("--paket-data", default="01_ANALISIS_UMUM", help="paket yang data/ contohnya diekspor")
     a = ap.parse_args()
     if not a.analisis.exists():
@@ -153,10 +184,12 @@ def main():
     data_dir = a.analisis / a.paket_data / "data"
     print("2) Layer");  layer = ekspor_layer(data_dir / "sigma_contoh.gpkg")
     print("3) DEM");  dem = ekspor_dem(data_dir / "dem_dummy.tif", data_dir / "sigma_contoh.gpkg")
+    print("4) Bangunan 3D");  bangunan = salin_bangunan(a.tiles3d)
     manifest = {"dibangun": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
-                "modul_python": modul, "jembatan_sha": _sha(REPO / "py" / "jembatan.py"), "layer": layer, "dem": dem}
+                "modul_python": modul, "jembatan_sha": _sha(REPO / "py" / "jembatan.py"), "layer": layer, "dem": dem,
+                "bangunan": bangunan}
     (REPO / "data" / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
-    print("4) data/manifest.json ditulis")
+    print("5) data/manifest.json ditulis")
 
 
 if __name__ == "__main__":

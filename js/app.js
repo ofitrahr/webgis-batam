@@ -67,6 +67,23 @@ function renderLayer() {
   const w = $('#tab-layer'); w.innerHTML = '';
   w.append(h('label', { class: 'label' }, 'Peta dasar'), h('select', { onchange: e => app.peta.gantiDasar(e.target.value) },
     app.peta.dasarDaftar.map(d => h('option', { value: d.id }, d.label))));
+  const b = app.manifest.bangunan;
+  if (b) {
+    const st = app.bangunanState ??= { tampak: true, gaya: 'tinggi', alfa: 1 };
+    w.append(h('label', { class: 'label' }, 'Bangunan 3D'), h('div', { class: 'layer-item' },
+      h('div', { class: 'layer-baris' },
+        h('label', { class: 'cek' }, h('input', { type: 'checkbox', checked: st.tampak, onchange: e => { st.tampak = e.target.checked; app.peta.tampilkanBangunan(st.tampak); } }),
+          h('span', { class: 'swatch blok' }), b.label),
+        h('span', { class: 'kecil redup mono' }, app.bangunanSiap ? fmtAngka(b.jumlah) : 'memuat…')),
+      h('div', { class: 'layer-info' }, h('span', { class: 'lencana osm' }, b.status), h('span', { class: 'kecil redup' }, ' ' + b.sumber)),
+      h('div', { class: 'opsi' }, h('label', { class: 'kecil' }, 'Warna '), h('select', { onchange: e => { st.gaya = e.target.value; app.peta.gayaBangunan(st.gaya, st.alfa); } },
+        h('option', { value: 'tinggi', selected: st.gaya === 'tinggi' }, 'menurut tinggi'), h('option', { value: 'polos', selected: st.gaya === 'polos' }, 'polos'))),
+      st.gaya === 'tinggi' ? h('div', { class: 'legenda-tinggi' },
+        h('div', { class: 'leg' }, ['#fde0dd', '#fbb4b9', '#f768a1', '#c51b8a', '#7a0177'].map(c => h('span', { style: `background:${c}` }))),
+        h('div', { class: 'legt' }, ['<8', '8', '15', '30', '≥60 m'].map(t => h('span', {}, t)))) : null,
+      h('input', { type: 'range', min: 0.2, max: 1, step: 0.05, value: st.alfa, class: 'opasitas', title: 'Transparansi bangunan',
+                   oninput: e => { st.alfa = +e.target.value; app.peta.gayaBangunan(st.gaya, st.alfa); } })));
+  }
   w.append(h('label', { class: 'label' }, 'Layer data'));
   for (const l of app.layerMeta) {
     const tampak = l._tampak ?? true, q = app.peta.filterQuery[l.id];
@@ -109,15 +126,17 @@ function renderInfo() {
     h('h3', {}, 'Tentang prototipe ini'),
     h('p', {}, 'Prototipe QA fitur analisis WebGIS Infrastruktur BP Batam (SIGMA). Semua analisis dijalankan oleh modul Python yang sama dengan yang diserahkan ke tim IT, di dalam peramban melalui Pyodide; tidak ada server.'),
     h('p', { class: 'peringatan' }, 'Data contoh: geometri sebagian dari OpenStreetMap, sebagian besar atribut dan DEM adalah DUMMY. Hasil hanya untuk menguji alur dan perilaku fitur, BUKAN untuk keputusan.'),
+    h('p', { class: 'kecil' }, 'Bangunan 3D LOD1 sementara dari sumber terbuka (tapak OSM/Overture, tinggi Google Open Buildings 2.5D 2023). Bukan tapak RBI BP Batam; nanti diganti hasil survei LiDAR.'),
     h('h4', {}, 'Build'),
     h('ul', { class: 'kecil' }, h('li', {}, 'Dibangun: ' + new Date(m.dibangun).toLocaleString('id-ID')),
       ...m.modul_python.map(x => h('li', {}, h('code', {}, `${x.file}`), ` (${x.paket}) sha ${x.sha}`)),
-      h('li', {}, `Pyodide ${py.PYODIDE_VERSI}; MapLibre GL ${maplibregl.getVersion?.() || ''}`)),
+      h('li', {}, `Pyodide ${py.PYODIDE_VERSI}; CesiumJS ${globalThis.Cesium?.VERSION || ''}`)),
     h('h4', {}, 'Status data'),
     h('table', { class: 'tabel kecil' }, h('thead', {}, h('tr', {}, ['Layer', 'Status', 'RFI-01', 'Kolom dummy'].map(x => h('th', {}, x)))),
       h('tbody', {}, m.layer.map(l => h('tr', {}, h('td', {}, l.label), h('td', {}, l.status), h('td', {}, l.rfi), h('td', { class: 'kecil' }, l.kolom_dummy.join(', ') || '—'))),
-        h('tr', {}, h('td', {}, 'DEM'), h('td', {}, m.dem.status), h('td', {}, 'A05'), h('td', { class: 'kecil' }, m.dem.sumber)))),
-    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan dan sungai © OpenStreetMap contributors (ODbL).'));
+        h('tr', {}, h('td', {}, 'DEM'), h('td', {}, m.dem.status), h('td', {}, 'A05'), h('td', { class: 'kecil' }, m.dem.sumber)),
+        m.bangunan ? h('tr', {}, h('td', {}, 'Bangunan 3D'), h('td', {}, m.bangunan.status), h('td', {}, 'A07–A08'), h('td', { class: 'kecil' }, `${m.bangunan.sumber}; ${fmtAngka(m.bangunan.jumlah)} bangunan, ${fmtAngka(m.bangunan.mb, 0)} MB`)) : null)),
+    h('p', { class: 'kecil redup' }, 'Peta dasar © Esri, HERE, Garmin, © OpenStreetMap contributors; citra © Esri. Data jalan, sungai, dan tapak bangunan © OpenStreetMap contributors / Overture Maps (ODbL); tinggi bangunan Google Open Buildings 2.5D (CC-BY 4.0).'));
 }
 
 // ------------------------------------------------------------------ awal
@@ -150,6 +169,12 @@ async function mulai() {
   const awal = location.hash.slice(1);
   app.bukaFitur(FITUR.some(f => f.kode === awal) ? awal : 'U1');
   app.peta.siap.then(() => { for (const [meta, gj] of layer) app.peta.tambahLayer(meta, gj); renderLayer(); });
+  document.querySelectorAll('[data-pandangan]').forEach(b => b.addEventListener('click', () => app.peta.pandangan(b.dataset.pandangan)));
+  if (app.manifest.bangunan) {
+    app.peta.muatBangunan(`${app.manifest.bangunan.url}?v=${encodeURIComponent(app.manifest.bangunan.versi || v)}`)
+      .then(() => { app.bangunanSiap = true; renderLayer(); })
+      .catch(e => { console.error(e); toast('Gagal memuat bangunan 3D: ' + e.message, 'galat', 8000); });
+  }
 
   try {
     await mesin;

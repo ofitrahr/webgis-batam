@@ -64,7 +64,7 @@ export default {
         ]),
         daftarKV([
           ['Terendah', h('span', {}, `${fmtAngka(s.z_min, 1)} m · STA ${fmtPanjang(s.sta_z_min_m)} `,
-            h('button', { class: 'tautan', onclick: () => { app.peta.tandai([s.lon_z_min, s.lat_z_min]); app.peta.map.flyTo({ center: [s.lon_z_min, s.lat_z_min], zoom: 16 }); } }, 'lihat'))],
+            h('button', { class: 'tautan', onclick: () => { app.peta.tandai([s.lon_z_min, s.lat_z_min]); app.peta.terbangKe([s.lon_z_min, s.lat_z_min]); } }, 'lihat'))],
           ['Tertinggi', `${fmtAngka(s.z_maks, 1)} m · STA ${fmtPanjang(s.sta_z_maks_m)}`],
           ['Rentang relief Δh', `${fmtAngka(s.rentang_relief_m, 1)} m`],
           ['Naik / turun kumulatif', `${fmtAngka(s.naik_kumulatif_m, 1)} / ${fmtAngka(s.turun_kumulatif_m, 1)} m`],

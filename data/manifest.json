@@ -1,5 +1,5 @@
 {
- "dibangun": "2026-11-06T19:17:47+07:00",
+ "dibangun": "2026-11-07T09:00:11+07:00",
  "modul_python": [
   {
    "paket": "01_ANALISIS_UMUM",
@@ -214,5 +214,76 @@
   "sumber": "DEM DUMMY sintetis SIGMA Batam, seed 20261106; ganti DEMNAS/LiDAR (RFI-01 A05)",
   "status": "Dummy",
   "catatan": "Dipotong ke cakupan layer jalan + 1 km dan dikuantisasi 0,1 m untuk peramban."
+ },
+ "bangunan": {
+  "url": "tiles/tileset_batam.json",
+  "label": "Bangunan 3D LOD1 (sementara)",
+  "jumlah": 169486,
+  "mb": 139.9,
+  "versi": "lod1-kota-batam-202611070900",
+  "status": "Sumber terbuka sementara",
+  "sumber": "Tapak OSM/Overture (ODbL), tinggi Google Open Buildings 2.5D 2023 (CC-BY 4.0)",
+  "per_kecamatan": [
+   {
+    "nama": "Batam Kota",
+    "bangunan": 26115,
+    "mb": 21.7
+   },
+   {
+    "nama": "Batu Aji",
+    "bangunan": 757,
+    "mb": 0.7
+   },
+   {
+    "nama": "Batu Ampar",
+    "bangunan": 11739,
+    "mb": 9.7
+   },
+   {
+    "nama": "Belakang Padang",
+    "bangunan": 1856,
+    "mb": 1.6
+   },
+   {
+    "nama": "Bengkong",
+    "bangunan": 24017,
+    "mb": 19.4
+   },
+   {
+    "nama": "Bulang",
+    "bangunan": 3675,
+    "mb": 3.1
+   },
+   {
+    "nama": "Galang",
+    "bangunan": 8538,
+    "mb": 7.0
+   },
+   {
+    "nama": "Lubuk Baja",
+    "bangunan": 11773,
+    "mb": 9.7
+   },
+   {
+    "nama": "Nongsa",
+    "bangunan": 24675,
+    "mb": 20.6
+   },
+   {
+    "nama": "Sagulung",
+    "bangunan": 1207,
+    "mb": 1.0
+   },
+   {
+    "nama": "Sei Beduk",
+    "bangunan": 17925,
+    "mb": 15.1
+   },
+   {
+    "nama": "Sekupang",
+    "bangunan": 37209,
+    "mb": 30.3
+   }
+  ]
  }
 }

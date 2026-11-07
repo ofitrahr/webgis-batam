@@ -173,3 +173,21 @@ select:focus, input:focus, textarea:focus { outline: 2px solid #c9a22755; border
 #tab-qa .tabel th:nth-child(5) { width: 64px; }
 #tab-qa .tabel td { overflow-wrap: anywhere; }
 #tab-qa .tabel .lencana { white-space: normal; text-align: center; }
+
+/* ---------- peta 3D (Cesium) ---------- */
+.cesium-viewer-bottom { left: auto; right: 6px; }
+.cesium-widget-credits { font-size: 10px; }
+.cesium-viewer-toolbar { top: 8px; right: 8px; }
+.kontrol-pandangan { position: absolute; top: 46px; right: 8px; z-index: 3; display: flex; flex-direction: column; gap: 4px; }
+.ikon-teks { background: #303336cc; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 11px; font-weight: 600; padding: 5px 0; width: 32px; cursor: pointer; }
+.ikon-teks:hover { background: #48b; }
+.popup-3d { position: absolute; z-index: 6; background: var(--panel); border-radius: 8px; box-shadow: 0 6px 22px #0004; padding: 8px 12px 10px;
+  max-width: 330px; max-height: 320px; overflow: auto; font-size: 12.5px; }
+.popup-3d table { border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+.popup-3d th { text-align: left; color: var(--redup); font-weight: 500; padding: 1px 8px 1px 0; vertical-align: top; white-space: nowrap; }
+.popup-3d td { padding: 1px 0; overflow-wrap: anywhere; }
+.tutup-popup { position: absolute; top: 2px; right: 4px; }
+.swatch.blok { background: linear-gradient(135deg, #fbb4b9, #c51b8a); width: 14px; height: 14px; }
+.legenda-tinggi { margin: 6px 0 0 24px; }
+.legenda-tinggi .leg { display: flex; height: 8px; border-radius: 3px; overflow: hidden; } .legenda-tinggi .leg span { flex: 1; }
+.legenda-tinggi .legt { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--redup); }
